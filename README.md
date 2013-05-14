@@ -1,16 +1,18 @@
-django_tutorial
-===============
 #Django Tutorial
 
 ##PART 1
 
 **Create a project**
-```django-admin startproject [project_name]```
+```
+django-admin startproject [project_name]
+```
 
 *Note: In Ubuntu’s distrobution of Django, django-admin.py is renamed to django-admin. Leave of .py. It doesn’t do this for manage.py, however.*
 
 **Create an app**
-```manage.py startapp [app_name]```
+```
+manage.py startapp [app_name]
+```
 
 **Project vs App**
 An app is a webapp with a specific function. A project can include many apps. Apps are pluggable, meaning that they can be plugged into many other projects.
@@ -21,7 +23,9 @@ An app is a webapp with a specific function. A project can include many apps. Ap
     * installed apps
     * many other settings relating to overall site configuration, such as user upload URL, etc.
 
-```manage.py syncdb    #important```
+```
+manage.py syncdb    #important
+```
 
 Used to create database tables found in the settings.py installed apps section. For example, when the Polls app was created, I had to add it to the settings.py installed apps section, and then call syncdb so it would create the tables I needed for that app.
 
@@ -32,45 +36,61 @@ Used to create database tables found in the settings.py installed apps section. 
 * you can override this by providing a human-readable name as the first param
 * supports typical relationships 1-1, 1-*, *-*
 
-```manage.py shell```
+```
+manage.py shell
+```
 
 Goes through manage.py to import your project’s settings.py
 
-```from django.utils import timezone
-p = Poll(question=”What’s new?”, pub_date=timezone.now())```
+```
+from django.utils import timezone
+p = Poll(question=”What’s new?”, pub_date=timezone.now())
+```
 
 Why? pub_date expects a timezone, because of the default settings.
 
-```p.save()```
+p.save()
 
 Must call to save to the database, every time. (Is this like Rails, where validations are performed on save and returns false if it fails?) Also, this gives it an ID.
 
-```__unicode__()```
+__unicode__()
 
 Instead of overriding the string method (__str__()), you override the __unicode__() method to provide readable ouput from Poll.objects.all(). The Django str method just calls the unicode method.
 
-**Filtering / getting**
+**Filtering and getting**
+
 By ID
-```Poll.objects.filter(id=1)```
+```
+Poll.objects.filter(id=1)
+```
 
 Starts With
-```Poll.objects.filter(question__startswith(‘What’))```
+```
+Poll.objects.filter(question__startswith(‘What’))
+```
 
 By primary key
-```Poll.objects.get(pk=1)```
+```
+Poll.objects.get(pk=1)
+```
 
 **Create a Poll with its constructor**
-```p = Poll(question=”Whatevs”, pub_date=timezone.now())
-p.save()```
+```
+p = Poll(question=”Whatevs”, pub_date=timezone.now())
+p.save()
+```
 
 **Add choices**
-```p.choice_set.create(choice_text=”Yo”, votes=0)```
+```
+p.choice_set.create(choice_text=”Yo”, votes=0)
+```
 
 ^The thing there is that p’s choice “set” gives access to the choice table and allows you to use the create method to invoke choice’s constructor.
 
 You can separate names with “__” in order to deal with those relationships, like
-
-```Choice.objects.filter(poll__pub_date__year=current_year)```
+```
+Choice.objects.filter(poll__pub_date__year=current_year)
+```
 
 This will get all the choices from polls that were published this year.
 
@@ -115,13 +135,17 @@ The project’s URLconf will actually handle /polls/ or whatever the app is mapp
 * return the rendered template in HttpResponse
 
 **render()**
-```return render(request, ‘imaview.html’, context)```
+```
+return render(request, ‘imaview.html’, context)
+```
 
 **Http404**
 raise this when someone attempts to access a resource that doesn’t exist.
 
 **get_object_or_404()**
-```poll = get_object_or_404(Poll, pk=poll_id) #this is awesome```
+```
+poll = get_object_or_404(Poll, pk=poll_id) #this is awesome
+```
 
 **Custom error pages**
 handler404 #set this in the root project urlconf file
